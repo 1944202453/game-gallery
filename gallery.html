@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 游戏回忆录</title>
+<script src="photos.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════
+   基础重置 & 变量
+   ═══════════════════════════════════════════════════════ */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg: #0a0a0f;
+  --surface: #14141f;
+  --surface2: #1e1e2e;
+  --text: #e0e0e0;
+  --text-dim: #8888aa;
+  --accent: #a855f7;
+  --accent2: #06b6d4;
+  --accent3: #f43f5e;
+  --glow: 0 0 20px rgba(168,85,247,0.3);
+  --border: rgba(255,255,255,0.06);
+  --radius: 12px;
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(168,85,247,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 80% 50%, rgba(6,182,212,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 40% at 20% 80%, rgba(244,63,94,0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   头部
+   ═══════════════════════════════════════════════════════ */
+.header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 60px 20px 40px;
+}
+
+.header h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.header p {
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════════════════════
+   筛选标签
+   ═══════════════════════════════════════════════════════ */
+.filter-bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 20px 30px;
+}
+
+.filter-btn {
+  padding: 8px 20px;
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  background: var(--surface);
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+}
+
+.filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: var(--glow);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--glow);
+}
+
+/* ═══════════════════════════════════════════════════════
+   瀑布流画廊
+   ═══════════════════════════════════════════════════════ */
+.gallery {
+  position: relative;
+  z-index: 1;
+  column-count: 4;
+  column-gap: 16px;
+  padding: 0 20px 60px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.card {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+}
+
+.card img,
+.card video {
+  width: 100%;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.card:hover img,
+.card:hover video {
+  transform: scale(1.05);
+}
+
+/* 视频播放图标 */
+.video-indicator {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+  border: 1.5px solid rgba(255,255,255,0.25);
+}
+
+.video-indicator::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 12px solid #fff;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  margin-left: 2px;
+}
+
+.video-duration {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* 卡片遮罩层 */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
+  opacity: 0;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+}
+
+.card:hover .card-overlay { opacity: 1; }
+
+.card-overlay .title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.card-overlay .subtitle {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.card-overlay .tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  width: fit-content;
+}
+
+.tag-pvp    { background: var(--accent3); color: #fff; }
+.tag-pve    { background: #10b981; color: #fff; }
+.tag-social { background: var(--accent2); color: #000; }
+.tag-event  { background: #f59e0b; color: #000; }
+.tag-other  { background: var(--accent); color: #fff; }
+
+/* ═══════════════════════════════════════════════════════
+   灯箱
+   ═══════════════════════════════════════════════════════ */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(10px);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lightbox.open {
+  display: flex;
+  opacity: 1;
+}
+
+.lightbox img,
+.lightbox video {
+  max-width: 90vw;
+  max-height: 75vh;
+  border-radius: var(--radius);
+  box-shadow: 0 0 60px rgba(168,85,247,0.15);
+  object-fit: contain;
+}
+
+#lbImage, #lbVideo { display: none; }
+
+.lightbox-info {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.lightbox-info .lb-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.lightbox-info .lb-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.lightbox-info .lb-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 8px;
+}
+
+.lb-close, .lb-prev, .lb-next {
+  position: absolute;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  z-index: 10;
+}
+
+.lb-close:hover, .lb-prev:hover, .lb-next:hover {
+  background: rgba(255,255,255,0.16);
+  border-color: var(--accent);
+}
+
+.lb-close { top: 20px; right: 20px; }
+.lb-prev  { left: 20px; top: 50%; transform: translateY(-50%); }
+.lb-next  { right: 20px; top: 50%; transform: translateY(-50%); }
+
+/* ═══════════════════════════════════════════════════════
+   页脚
+   ═══════════════════════════════════════════════════════ */
+.footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.footer span {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════
+   响应式
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 1100px) { .gallery { column-count:3; } }
+@media (max-width: 768px)  { .gallery { column-count:2; column-gap:10px; padding: 0 10px 40px; }
+                             .lightbox video { max-width:95vw; max-height:50vh; } }
+@media (max-width: 480px)  { .gallery { column-count:1; }
+                             .lb-prev, .lb-next { width:36px; height:36px; font-size:1rem; } }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <h1>🎮 游戏回忆录</h1>
+  <p>每一帧都是并肩作战的青春</p>
+</header>
+
+<nav class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-filter="all">✨ 全部</button>
+  <button class="filter-btn" data-filter="pvp">⚔️ PVP</button>
+  <button class="filter-btn" data-filter="pve">🐉 PVE</button>
+  <button class="filter-btn" data-filter="social">📸 合照</button>
+  <button class="filter-btn" data-filter="event">🎉 活动</button>
+  <button class="filter-btn" data-filter="other">🎯 其他</button>
+  <button class="filter-btn" data-filter="video">🎬 视频</button>
+</nav>
+
+<main class="gallery" id="gallery"></main>
+
+<!-- 灯箱 -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose" title="关闭">✕</button>
+  <button class="lb-prev" id="lbPrev" title="上一张">◂</button>
+  <button class="lb-next" id="lbNext" title="下一张">▸</button>
+  <img src="" alt="" id="lbImage">
+  <video id="lbVideo" controls preload="metadata"></video>
+  <div class="lightbox-info">
+    <div class="lb-title" id="lbTitle"></div>
+    <div class="lb-subtitle" id="lbSubtitle"></div>
+    <span class="lb-tag" id="lbTag"></span>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>Made with <span>❤</span> · 照片 & 视频存放于 <code>/photos</code> 文件夹</p>
+</footer>
+
+<script>
+/* ────────────────────────────────────────────────────────
+   媒体数据
+   - 如果 photos.js 存在（双击 generate.bat 生成），自动加载
+   - 如果不存在，使用默认演示数据
+   ──────────────────────────────────────────────────────── */
+const photoData = (window.PHOTO_DATA && window.PHOTO_DATA.length > 0)
+  ? window.PHOTO_DATA
+  : [
+      { type:"image", src:"https://picsum.photos/seed/demo1/600/750", title:"演示照片", subtitle:"双击 generate.bat 加载你的照片", category:"other", tagText:"示例" },
+      { type:"image", src:"https://picsum.photos/seed/demo2/600/400", title:"还没有加载照片？", subtitle:"把照片放入 photos 文件夹，然后双击 generate.bat", category:"other", tagText:"示例" },
+      { type:"video", src:"https://www.w3schools.com/html/mov_bbb.mp4", title:"演示视频", subtitle:"你的视频也会显示在这里", category:"other", tagText:"示例", duration:"0:10" }
+    ];
+
+/* ────────────────────────────────────────────────────────
+   渲染画廊
+   ──────────────────────────────────────────────────────── */
+const gallery = document.getElementById('gallery');
+const tagClassMap = {
+  pvp: 'tag-pvp',
+  pve: 'tag-pve',
+  social: 'tag-social',
+  event: 'tag-event',
+  other: 'tag-other'
+};
+
+function createCard(media) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.category = media.category;
+  card.dataset.type = media.type || 'image';
+
+  if (media.type === 'video') {
+    card.innerHTML = `
+      <video src="${media.src}" preload="metadata" muted></video>
+      <div class="video-indicator"></div>
+      <div class="video-duration">${media.duration || ''}</div>
+      <div class="card-overlay">
+        <span class="tag ${tagClassMap[media.category] || 'tag-other'}">${media.tagText}</span>
+        <span class="title">${media.title}</span>
+        <span class="subtitle">${media.subtitle}</span>
+      </div>
+    `;
+  } else {
+    card.innerHTML = `
+      <img src="${media.src}" alt="${media.title}" loading="lazy">
+      <div class="card-overlay">
+        <span class="tag ${tagClassMap[media.category] || 'tag-other'}">${media.tagText}</span>
+        <span class="title">${media.title}</span>
+        <span class="subtitle">${media.subtitle}</span>
+      </div>
+    `;
+  }
+
+  card.addEventListener('click', () => openLightbox(media));
+  return card;
+}
+
+function renderGallery(filter = 'all') {
+  gallery.innerHTML = '';
+  let filtered;
+  if (filter === 'video') {
+    filtered = photoData.filter(p => p.type === 'video');
+  } else if (filter === 'all') {
+    filtered = photoData;
+  } else {
+    filtered = photoData.filter(p => p.category === filter);
+  }
+  filtered.forEach(p => gallery.appendChild(createCard(p)));
+}
+
+/* ────────────────────────────────────────────────────────
+   筛选功能
+   ──────────────────────────────────────────────────────── */
+const filterBar = document.getElementById('filterBar');
+filterBar.addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGallery(btn.dataset.filter);
+});
+
+/* ────────────────────────────────────────────────────────
+   灯箱
+   ──────────────────────────────────────────────────────── */
+const lightbox = document.getElementById('lightbox');
+const lbImage = document.getElementById('lbImage');
+const lbVideo = document.getElementById('lbVideo');
+const lbTitle = document.getElementById('lbTitle');
+const lbSubtitle = document.getElementById('lbSubtitle');
+const lbTag = document.getElementById('lbTag');
+let currentMedia = null;
+
+function openLightbox(media) {
+  currentMedia = media;
+  const isVideo = media.type === 'video';
+
+  // 切换显示：图 or 视频
+  lbImage.style.display = isVideo ? 'none' : 'block';
+  lbVideo.style.display = isVideo ? 'block' : 'none';
+
+  if (isVideo) {
+    lbVideo.src = media.src;
+    lbVideo.currentTime = 0;
+  } else {
+    lbImage.src = media.src;
+    lbImage.alt = media.title;
+  }
+
+  lbTitle.textContent = media.title;
+  lbSubtitle.textContent = media.subtitle;
+  lbTag.textContent = media.tagText;
+  lbTag.className = 'lb-tag ' + (tagClassMap[media.category] || 'tag-other');
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lbVideo.pause();
+  lbVideo.src = '';
+  lbImage.src = '';
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+  currentMedia = null;
+}
+
+function navigateLightbox(direction) {
+  if (!currentMedia) return;
+  const currentIndex = photoData.indexOf(currentMedia);
+  let newIndex = currentIndex + direction;
+  if (newIndex < 0) newIndex = photoData.length - 1;
+  if (newIndex >= photoData.length) newIndex = 0;
+  openLightbox(photoData[newIndex]);
+}
+
+document.getElementById('lbClose').addEventListener('click', closeLightbox);
+document.getElementById('lbPrev').addEventListener('click', () => navigateLightbox(-1));
+document.getElementById('lbNext').addEventListener('click', () => navigateLightbox(1));
+
+lightbox.addEventListener('click', e => {
+  if (e.target === lightbox) closeLightbox();
+});
+
+document.addEventListener('keydown', e => {
+  if (!lightbox.classList.contains('open')) return;
+  switch (e.key) {
+    case 'Escape':     closeLightbox(); break;
+    case 'ArrowLeft':  navigateLightbox(-1); break;
+    case 'ArrowRight': navigateLightbox(1); break;
+  }
+});
+
+// 触摸滑动
+let touchStartX = 0;
+lightbox.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+lightbox.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 60) navigateLightbox(diff > 0 ? 1 : -1);
+});
+
+/* ────────────────────────────────────────────────────────
+   初始化
+   ──────────────────────────────────────────────────────── */
+renderGallery();
+</script>
+</body>
+</html>

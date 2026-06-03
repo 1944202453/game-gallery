@@ -1,0 +1,8 @@
+把游戏截图放到这个文件夹里。
+
+然后在 gallery.html 的 photoData 数组里替换 src 路径：
+
+例如：
+  { src: "photos/公会战合影.jpg", title: "公会战合影", subtitle: "...", category: "pve", tagText: "PVE" }
+
+分类选项: pvp | pve | social | event | other
