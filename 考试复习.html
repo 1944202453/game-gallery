@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>医师资格实操复习 - 祝梁冠池考试顺利一把过！</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg: #f0f4f8;
+  --card-bg: #ffffff;
+  --text: #1a202c;
+  --text-secondary: #4a5568;
+  --accent: #2563eb;
+  --accent-light: #dbeafe;
+  --success: #16a34a;
+  --success-light: #dcfce7;
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+  --border: #e2e8f0;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+  --radius: 12px;
+}
+
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.7;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #1e40af, #3b82f6, #06b6d4);
+  color: #fff;
+  text-align: center;
+  padding: 50px 20px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.hero h1 {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.hero .subtitle {
+  margin-top: 10px;
+  font-size: 1.15rem;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+.hero .emoji-row {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Container */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* Random Picker */
+.picker-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 24px;
+  border: 2px solid var(--accent-light);
+}
+
+.picker-card h2 {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.picker-result {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--accent);
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  padding: 10px;
+}
+
+.picker-result.rolled {
+  animation: popIn 0.5s ease;
+  color: var(--success);
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.btn-roll {
+  display: inline-block;
+  padding: 14px 40px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  margin-top: 16px;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+  transition: all 0.2s;
+}
+
+.btn-roll:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+}
+
+.btn-roll:active {
+  transform: scale(0.96);
+}
+
+.picker-stats {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Topic Cards */
+.topic-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.topic-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.topic-card.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.topic-header {
+  padding: 18px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.topic-header:hover {
+  background: #f8fafc;
+}
+
+.topic-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.topic-title {
+  flex: 1;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.topic-arrow {
+  font-size: 1.2rem;
+  color: #94a3b8;
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.topic-card.open .topic-arrow {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+
+.topic-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+}
+
+.topic-card.open .topic-body {
+  max-height: 4000px;
+}
+
+.topic-content {
+  padding: 0 20px 24px 70px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.topic-content h4 {
+  color: var(--text);
+  margin: 14px 0 6px;
+  font-size: 1rem;
+}
+
+.topic-content h4:first-child {
+  margin-top: 0;
+}
+
+.topic-content ol,
+.topic-content ul {
+  padding-left: 22px;
+  margin: 4px 0;
+}
+
+.topic-content li {
+  margin-bottom: 3px;
+}
+
+.topic-content .step {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.topic-content .highlight {
+  background: var(--success-light);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.topic-content .warn {
+  background: var(--warning-light);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #92400e;
+  font-weight: 600;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border);
+  margin-top: 20px;
+}
+
+.footer .bless {
+  font-size: 1.2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Search */
+.search-bar {
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 14px 20px;
+  border: 2px solid var(--border);
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  background: var(--card-bg);
+  transition: border-color 0.2s;
+}
+
+.search-bar input:focus {
+  border-color: var(--accent);
+}
+
+/* Count badge */
+.count-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--success-light);
+  color: var(--success);
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .topic-content { padding: 0 14px 20px 60px; }
+  .topic-title { font-size: 0.95rem; }
+  .picker-result { font-size: 1.5rem; }
+  .btn-roll { padding: 12px 30px; font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<header class="hero">
+  <div class="emoji-row">🎓💉🩺🏥</div>
+  <h1>医师资格实操考试复习</h1>
+  <p class="subtitle">祝梁冠池考试顺利一把过！💪✨</p>
+</header>
+
+<!-- ═══════════════════════════ MAIN ═══════════════════════════ -->
+<main class="container">
+
+  <!-- Random Picker -->
+  <div class="picker-card" id="pickerCard">
+    <h2>🎲 模拟随机抽题</h2>
+    <div class="picker-result" id="pickerResult">点击下方按钮抽题</div>
+    <button class="btn-roll" onclick="rollTopic()">🔀 随机抽一题</button>
+    <p class="picker-stats">共 <span id="totalCount">8</span> 题，已抽 <span id="rolledCount">0</span> 题</p>
+  </div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="🔍 搜索操作步骤..." oninput="filterTopics()">
+  </div>
+
+  <!-- Topic List -->
+  <div id="topicList"></div>
+
+</main>
+
+<footer class="footer">
+  <p class="bless">🍀 祝梁冠池考试顺利一把过！🍀</p>
+  <p style="margin-top:6px;">内容仅供参考，请以教材和老师指导为准</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════
+   题库数据
+   ═══════════════════════════════════════════ */
+const topics = [
+  {
+    id: 1,
+    title: "外科洗手消毒",
+    icon: "🧼",
+    steps: `
+      <h4>📋 操作目的</h4>
+      <p>清除手和前臂皮肤表面的暂住菌和部分常驻菌，达到外科手消毒标准，预防手术部位感染。</p>
+
+      <h4>🔢 操作流程</h4>
+      <ol>
+        <li><span class="step">准备：</span>修剪指甲、摘除手部饰物，穿洗手衣裤，戴帽子口罩。检查洗手液、消毒液有效期。</li>
+        <li><span class="step">初步冲洗：</span>打开水龙头（感应式/脚踏式），调节水温。双手及前臂充分淋湿。</li>
+        <li><span class="step">取洗手液：</span>取适量洗手液 3-5ml，均匀涂抹双手及前臂。</li>
+        <li><span class="step">六步洗手：</span>按 <span class="highlight">「内外夹弓大立」</span> 顺序揉搓：
+          <ul>
+            <li>① 内 — 掌心对掌心揉搓</li>
+            <li>② 外 — 手心对手背，手指交叉揉搓（左右交换）</li>
+            <li>③ 夹 — 掌心对掌心，十指交叉揉搓</li>
+            <li>④ 弓 — 弯曲手指关节在掌心揉搓（左右交换）</li>
+            <li>⑤ 大 — 拇指在掌心旋转揉搓（左右交换）</li>
+            <li>⑥ 立 — 指尖并拢在掌心揉搓</li>
+          </ul>
+        </li>
+        <li><span class="step">手臂清洗：</span>环形揉搓前臂，从手腕到肘上 10cm，特别注意甲缘、甲沟、指蹼。</li>
+        <li><span class="step">冲洗：</span>流动水彻底冲洗，水从指尖流向肘部。<span class="warn">⚠️ 不可来回冲洗！</span></li>
+        <li><span class="step">擦干：</span>无菌巾从指尖向肘部擦干，<span class="warn">不可来回擦！</span>每侧用一块无菌巾。</li>
+        <li><span class="step">消毒：</span>取含醇手消毒液 3-5ml，涂抹手和前臂（同六步洗手法），揉搓至干燥。</li>
+        <li><span class="step">保持状态：</span>双手抬高保持在胸前，<span class="warn">不可接触任何未消毒物品！</span></li>
+      </ol>
+
+      <h4>💡 记忆口诀</h4>
+      <p><span class="highlight">「前-后-夹-弓-大-立」</span> + 冲时指尖朝下、擦时从指尖向肘、不可来回。</p>
+    `
+  },
+  {
+    id: 2,
+    title: "穿手术衣",
+    icon: "👔",
+    steps: `
+      <h4>📋 操作目的</h4>
+      <p>建立无菌屏障，防止手术过程中微生物污染手术切口。</p>
+
+      <h4>🔢 操作流程</h4>
+      <ol>
+        <li><span class="step">准备：</span>外科洗手消毒完毕后进入手术间。检查手术衣包装完整性及有效期。</li>
+        <li><span class="step">取衣：</span>打开无菌手术衣包，<span class="warn">手只接触手术衣的外面（非无菌面）</span>。</li>
+        <li><span class="step">抖开：</span>抓住衣领两端，轻轻抖开手术衣，<span class="warn">不可触碰地面或周围物品</span>。</li>
+        <li><span class="step">穿入：</span>双手同时伸入袖管，手臂前伸，<span class="warn">手不可伸出袖口外</span>。</li>
+        <li><span class="step">系带：</span>巡回护士在背后协助系好领口带和腰背部系带。</li>
+        <li><span class="step">腰带：</span>戴好无菌手套后，由器械护士递送腰带，自行系好或由他人协助。</li>
+        <li><span class="step">检查：</span>确认手术衣完全覆盖身体前后，袖口被手套覆盖。</li>
+      </ol>
+
+      <h4>💡 关键注意事项</h4>
+      <ul>
+        <li>穿衣全过程双手保持胸前位</li>
+        <li><span class="warn">不可触碰手术衣外面（无菌面）</span></li>
+        <li>穿好后只能在有菌区活动</li>
+        <li>一旦污染立即更换</li>
+      </ul>
+    `
+  },
+  {
+    id: 3,
+    title: "心肺复苏 (CPR)",
+    icon: "❤️",
+    steps: `
+      <h4>📋 操作目的</h4>
+      <p>对心跳呼吸骤停患者实施胸外按压和人工通气，维持心脑等重要器官的基本血液供应。</p>
+
+      <h4>🔢 操作流程（C-A-B 顺序）</h4>
+      <ol>
+        <li><span class="step">判断环境安全：</span>确认现场环境安全，做好个人防护。</li>
+        <li><span class="step">判断意识：</span>轻拍双肩、大声呼唤：「先生/女士！你怎么了？」判断有无反应。</li>
+        <li><span class="step">呼救：</span>确认无意识后立即呼救，指定专人拨打 120，取 AED（自动体外除颤器）。</li>
+        <li><span class="step">判断脉搏呼吸：</span>触摸颈动脉搏动（5-10 秒），同时观察胸廓起伏。<span class="warn">时间不超过 10 秒！</span></li>
+        <li><span class="step">C - 胸外按压：</span>
+          <ul>
+            <li>部位：<span class="highlight">两乳头连线中点（胸骨中下 1/3 交界处）</span></li>
+            <li>手法：双手掌根重叠，十指相扣，手臂垂直</li>
+            <li>深度：<span class="highlight">5-6 cm</span></li>
+            <li>频率：<span class="highlight">100-120 次/分</span></li>
+            <li>比例：按压与通气 = <span class="highlight">30 : 2</span></li>
+            <li>每次按压后胸廓完全回弹</li>
+          </ul>
+        </li>
+        <li><span class="step">A - 开放气道：</span>仰头抬颏法（无颈椎损伤时），清除口鼻腔异物。</li>
+        <li><span class="step">B - 人工通气：</span>
+          <ul>
+            <li>深吸一口气，口对口吹气（捏住患者鼻孔）</li>
+            <li>每次 1 秒，见胸廓抬起</li>
+            <li>每次吹气间隔松开鼻孔</li>
+          </ul>
+        </li>
+        <li><span class="step">五循环一评估：</span>每 5 个 30:2 循环（约 2 分钟）重新评估脉搏呼吸，<span class="warn">判断不超过 10 秒</span>。</li>
+        <li><span class="step">除颤：</span>AED 到达后立即使用，分析心律，按语音提示操作。</li>
+        <li><span class="step">终止指征：</span>自主呼吸心跳恢复 / 医护人员到达 / 施救者精疲力竭。</li>
+      </ol>
+
+      <h4>💡 核心数据记忆</h4>
+      <p><span class="highlight">按压深度 5-6cm，频率 100-120，比例 30:2，5 循环一评估</span></p>
+    `
+  },
+  {
+    id: 4,
+    title: "穿隔离衣",
+    icon: "🥼",
+    steps: `
+      <h4>📋 操作目的</h4>
+      <p>保护医护人员及患者，防止病原微生物传播，适用于接触隔离患者时。</p>
+
+      <h4>🔢 操作流程</h4>
+      <ol>
+        <li><span class="step">准备：</span>评估患者病情及隔离类型。准备合适的隔离衣，检查有无破损。</li>
+        <li><span class="step">摘除饰物：</span>摘除手表、戒指等饰物，卷起工作服袖口至肘上。</li>
+        <li><span class="step">洗手：</span>按标准六步洗手法洗手。</li>
+        <li><span class="step">取隔离衣：</span>手持衣领，<span class="warn">清洁面朝向自己</span>，展开隔离衣。</li>
+        <li><span class="step">穿袖：</span>一手持衣领，另一手伸入袖内，换手持衣领穿另一袖。<span class="warn">手不可触及隔离衣外面（污染面）！</span></li>
+        <li><span class="step">系领口：</span>两手持衣领由前向后理顺领边，扣上领口。</li>
+        <li><span class="step">系袖口：</span>由助手协助系好袖口或使用松紧袖口。</li>
+        <li><span class="step">系腰带：</span>
+          <ul>
+            <li>将隔离衣一侧腰带从背后交叉绕至前面</li>
+            <li>在身体前面打结</li>
+            <li><span class="warn">手触及隔离衣外面（污染面）后不可再接触清洁区！</span></li>
+          </ul>
+        </li>
+        <li><span class="step">检查：</span>确认隔离衣完全覆盖工作服，无暴露区域。</li>
+      </ol>
+
+      <h4>💡 脱隔离衣关键点</h4>
+      <ul>
+        <li>先解开腰带、袖口</li>
+        <li>用戴手套的手解开领扣</li>
+        <li><span class="warn">将隔离衣外面（污染面）向内卷折</span></li>
+        <li>投入医疗废物袋</li>
+        <li>脱后立即洗手</li>
+      </ul>
+    `
+  },
+  {
+    id: 5,
+    title: "阑尾手术消毒",
+    icon: "🏥",
+    steps: `
+      <h4>📋 操作目的</h4>
+      <p>杀灭手术区域皮肤上的细菌，建立无菌手术野，预防切口感染。</p>
+
+      <h4>🔢 操作流程</h4>
+      <ol>
+        <li><span class="step">准备物品：</span>消毒液（碘伏/安尔碘）、无菌棉球/纱布、卵圆钳、无菌巾。</li>
+        <li><span class="step">核对：</span>核对患者信息、手术部位（<span class="warn">标记左右侧！</span>）。</li>
+        <li><span class="step">暴露：</span>充分暴露消毒区域，注意保暖和保护隐私。</li>
+        <li><span class="step">消毒范围：</span><span class="highlight">上至剑突，下至大腿上 1/3，两侧至腋中线。</span></li>
+        <li><span class="step">消毒顺序：</span>
+          <ul>
+            <li>用卵圆钳夹取碘伏棉球</li>
+            <li><span class="highlight">从切口中心向外周环形消毒</span></li>
+            <li><span class="warn">不可逆行！已消毒过的区域不可再回到中心</span></li>
+            <li>消毒 2-3 遍，范围逐遍缩小</li>
+          </ul>
+        </li>
+        <li><span class="step">注意特殊部位：</span>脐部用棉签蘸碘伏仔细消毒（如有污垢先用石蜡油清）。</li>
+        <li><span class="step">铺巾：</span>消毒后按规范铺盖无菌手术单，暴露切口部位。</li>
+      </ol>
+
+      <h4>💡 核心原则</h4>
+      <p><span class="highlight">从中心向外周、从清洁到污染、不逆行不重复</span></p>
+    `
+  },
+  {
+    id: 6,
+    title: "骨折固定",
+    icon: "🦴",
+    steps: `
+      <h4>📋 操作目的</h4>
+      <p>固定骨折部位，减轻疼痛，防止骨折断端移位损伤周围血管、神经和组织。</p>
+
+      <h4>🔢 操作流程（以四肢骨折夹板固定为例）</h4>
+      <ol>
+        <li><span class="step">评估：</span>检查患肢的<span class="highlight">远端血运（颜色、温度、毛细血管充盈）</span>、感觉、运动功能。</li>
+        <li><span class="step">准备物品：</span>夹板（长度超过骨折部位上下两个关节）、棉垫、绷带、三角巾。</li>
+        <li><span class="step">体位：</span>患者取舒适体位，<span class="warn">尽量不移动患肢</span>。如有伤口先止血包扎。</li>
+        <li><span class="step">垫衬：</span>在骨突处和夹板内侧垫棉垫，防止压伤。</li>
+        <li><span class="step">放置夹板：</span>夹板放在骨折肢体的<span class="warn">外侧</span>，跨越骨折部位上、下两个关节。</li>
+        <li><span class="step">固定：</span>
+          <ul>
+            <li>用绷带从肢体远端向近端缠绕固定</li>
+            <li>先固定骨折近端，再固定远端</li>
+            <li>松紧适宜 — <span class="highlight">能插入一指为宜</span></li>
+            <li><span class="warn">暴露出指（趾）端以便观察血运！</span></li>
+          </ul>
+        </li>
+        <li><span class="step">悬吊（上肢）：</span>用三角巾将前臂悬吊于胸前，肘关节屈曲 90°。</li>
+        <li><span class="step">再次评估：</span>检查远端血运、感觉、运动，与固定前对比。</li>
+      </ol>
+
+      <h4>💡 核心原则</h4>
+      <p><span class="highlight">超关节固定、松紧适度、暴露指端、固定前后查血运</span></p>
+    `
+  },
+  {
+    id: 7,
+    title: "男女导尿术",
+    icon: "💧",
+    steps: `
+      <h4>📋 操作目的</h4>
+      <p>引流尿液解除尿潴留、留取无菌尿标本、术前准备、监测尿量等。</p>
+
+      <h4>🔢 操作流程</h4>
+      <ol>
+        <li><span class="step">核对解释：</span>核对患者信息，解释操作目的，保护隐私（屏风/隔帘）。</li>
+        <li><span class="step">准备物品：</span>导尿包（检查有效期）、无菌手套、消毒液、润滑剂、引流袋。</li>
+        <li><span class="step">体位：</span>
+          <ul>
+            <li><span class="highlight">女性：</span>屈膝仰卧位，两腿外展</li>
+            <li><span class="highlight">男性：</span>仰卧位，双腿伸直稍分开</li>
+          </ul>
+        </li>
+        <li><span class="step">初步消毒：</span>
+          <ul>
+            <li><span class="highlight">女性（由内向外、由上到下）：</span>阴阜 → 大阴唇 → 小阴唇 → 尿道口</li>
+            <li><span class="highlight">男性：</span>尿道外口 → 龟头 → 冠状沟 → 阴茎</li>
+            <li>每个棉球只用一次，<span class="warn">不可反复涂抹</span></li>
+          </ul>
+        </li>
+        <li><span class="step">再次消毒：</span>戴无菌手套，铺洞巾，再次消毒尿道口。</li>
+        <li><span class="step">润滑导管：</span>用无菌石蜡油润滑导尿管前端。</li>
+        <li><span class="step">插管：</span>
+          <ul>
+            <li><span class="highlight">女性：</span>轻轻插入 4-6cm，见尿液流出后再插入 1-2cm</li>
+            <li><span class="highlight">男性：</span>提起阴茎与腹壁成 60° 角，插入 20-22cm，见尿再插入 1-2cm</li>
+          </ul>
+        </li>
+        <li><span class="step">固定：</span>气囊注水 10-15ml 固定，轻轻外拉确认固定牢靠。</li>
+        <li><span class="step">连接：</span>连接引流袋，保持引流管低于膀胱水平。</li>
+      </ol>
+
+      <h4>💡 男女差异速记</h4>
+      <ul>
+        <li><span class="highlight">女性：</span>插管 4-6cm，屈膝外展位</li>
+        <li><span class="highlight">男性：</span>插管 20-22cm，阴茎 60° 角</li>
+        <li>共同点：见尿再进 1-2cm，气囊注水固定</li>
+      </ul>
+    `
+  },
+  {
+    id: 8,
+    title: "胸腔穿刺",
+    icon: "🫁",
+    steps: `
+      <h4>📋 操作目的</h4>
+      <p>诊断性穿刺明确胸腔积液性质，治疗性穿刺引流积液或积气，缓解呼吸困难。</p>
+
+      <h4>🔢 操作流程</h4>
+      <ol>
+        <li><span class="step">核对解释：</span>核对患者信息，签署知情同意书，解释操作过程。</li>
+        <li><span class="step">定位：</span>
+          <ul>
+            <li><span class="highlight">B 超定位</span>（首选）或体格检查定位</li>
+            <li>常用穿刺点：<span class="highlight">腋后线第 7-9 肋间</span> 或 <span class="highlight">肩胛线第 8-10 肋间</span></li>
+            <li><span class="warn">沿肋骨上缘穿刺！避免损伤肋间血管神经！</span></li>
+          </ul>
+        </li>
+        <li><span class="step">体位：</span>患者取坐位，面向椅背，双手臂搭在椅背上，头伏于手臂上。</li>
+        <li><span class="step">消毒铺巾：</span>碘伏消毒（穿刺点周围 15cm），戴无菌手套，铺洞巾。</li>
+        <li><span class="step">麻醉：</span>2% 利多卡因局部浸润麻醉，<span class="warn">先皮内→皮下→肋间肌→胸膜</span>，回抽无血再注药。</li>
+        <li><span class="step">穿刺：</span>
+          <ul>
+            <li>穿刺针沿<span class="highlight">肋骨上缘</span>垂直进针</li>
+            <li>有落空感时停止进针</li>
+            <li><span class="warn">不可过深以免刺伤肺组织！</span></li>
+          </ul>
+        </li>
+        <li><span class="step">抽液：</span>
+          <ul>
+            <li>用注射器抽吸，<span class="warn">首次抽液不超过 600ml，以后每次不超过 1000ml</span></li>
+            <li>抽液过程中密切观察患者反应（面色、呼吸、脉搏）</li>
+          </ul>
+        </li>
+        <li><span class="step">拔针：</span>拔针后按压穿刺点 2-3 分钟，无菌敷料覆盖。</li>
+        <li><span class="step">术后：</span>嘱患者卧床休息，观察有无胸痛、呼吸困难、咯血等。</li>
+      </ol>
+
+      <h4>💡 核心数据</h4>
+      <p><span class="highlight">肋骨上缘进针 | 首次抽液 ≤ 600ml | 腋后线 7-9 肋间 | 穿刺点 15cm 消毒</span></p>
+    `
+  }
+];
+
+/* ═══════════════════════════════════════════
+   渲染
+   ═══════════════════════════════════════════ */
+const topicList = document.getElementById('topicList');
+let rolledSet = new Set();
+
+function renderTopics(filter = '') {
+  const filtered = filter
+    ? topics.filter(t => t.title.includes(filter) || t.steps.includes(filter))
+    : topics;
+
+  document.getElementById('totalCount').textContent = topics.length;
+
+  topicList.innerHTML = filtered.map(t => `
+    <div class="topic-card" id="card-${t.id}" data-id="${t.id}">
+      <div class="topic-header" onclick="toggleTopic(${t.id})">
+        <span class="topic-number">${t.icon}</span>
+        <span class="topic-title">${t.title}</span>
+        <span class="topic-arrow">▾</span>
+      </div>
+      <div class="topic-body">
+        <div class="topic-content">${t.steps}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleTopic(id) {
+  const card = document.getElementById('card-' + id);
+  card.classList.toggle('open');
+}
+
+function filterTopics() {
+  const q = document.getElementById('searchInput').value.trim();
+  renderTopics(q);
+  // Re-open any that were open
+}
+
+/* ═══════════════════════════════════════════
+   随机抽题
+   ═══════════════════════════════════════════ */
+function rollTopic() {
+  const idx = Math.floor(Math.random() * topics.length);
+  const topic = topics[idx];
+  const resultEl = document.getElementById('pickerResult');
+
+  // Animate
+  resultEl.classList.remove('rolled');
+  void resultEl.offsetWidth;
+  resultEl.textContent = topic.icon + ' ' + topic.title;
+  resultEl.classList.add('rolled');
+
+  // Track
+  rolledSet.add(topic.id);
+  document.getElementById('rolledCount').textContent = rolledSet.size;
+
+  // Scroll & open
+  const card = document.getElementById('card-' + topic.id);
+  if (card) {
+    card.classList.add('open', 'active');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Remove active highlight after 3s
+    setTimeout(() => card.classList.remove('active'), 3000);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Init
+   ═══════════════════════════════════════════ */
+renderTopics();
+</script>
+</body>
+</html>
